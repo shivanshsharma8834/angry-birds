@@ -4,6 +4,8 @@ import math
 import time
 import pymunk as pmk
 import pygame as pg 
+from bird import Bird
+
 
 class Game:
 
@@ -19,26 +21,32 @@ class Game:
 
     def load_assets(self):
 
-        self.redBird = pg.image.load("../assets/images/red-bird.png")
-        self.backGround = pg.image.load("../assets/background.png")
-
+        # self.redBird = pg.image.load("../assets/images/red-bird.png")
+        self.backGround = pg.image.load("../assets/images/background.png")
 
 
     def run(self):
 
         self.load_assets()
 
-        body = pmk.Body()
+        # body = pmk.Body()
 
-        body.position = 500, 0
-        poly = pmk.Poly.create_box(body)
-        poly.mass = 10 
-        self.space.add(body, poly)
+        # body.position = 500, 0
+        # poly = pmk.Poly.create_box(body)
+        # poly.mass = 10 
+        # self.space.add(body, poly)
+
+        bird = Bird(self)
+
+        floor = pmk.Body(body_type=pmk.Body.STATIC)
+        floor.position = [0, 600]
+        floorShape = pmk.Poly.create_box(floor, (1280,10))
+        self.space.add(floor,floorShape)
+
 
         running = True
 
         while running:
-
 
             for event in pg.event.get():
 
@@ -47,10 +55,10 @@ class Game:
                     running = False 
 
             self.screen.fill("black")
-            self.screen.blit(self.backGround)
-            
+            self.screen.blit(self.backGround, (0,0))
 
-            self.screen.blit(self.redBird, body.position)
+
+            bird.update()
 
             self.space.step(0.50)
 
